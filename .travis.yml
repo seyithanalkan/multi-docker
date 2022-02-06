@@ -9,10 +9,10 @@ script:
   - docker run -e CI=true sythnlkn/react-test npm test -- --coverage
 
 after_success:
-  - docker build -t /sythnlkn/multi-client ./client
-  - docker build -t /sythnlkn/multi-nginx ./nginx
-  - docker build -t /sythnlkn/multi-server ./server
-  - docker build -t /sythnlkn/multi-worker ./worker
+  - docker build -t sythnlkn/multi-client ./client
+  - docker build -t sythnlkn/multi-nginx ./nginx
+  - docker build -t sythnlkn/multi-server ./server
+  - docker build -t sythnlkn/multi-worker ./worker
 
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker push sythnlkn/multi-client
