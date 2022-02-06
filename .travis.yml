@@ -17,7 +17,7 @@ after_success:
   - docker build -t sythnlkn/multi-worker ./worker
 
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push sythnlkn/multi-client
+  - docker push sythnlkn/multi-worker
   - docker push sythnlkn/multi-nginx
   - docker push sythnlkn/multi-server
-  - docker push sythnlkn/multi-worker
+  - docker push sythnlkn/multi-client
