@@ -4,20 +4,33 @@ language: generic
 services:
   - docker
 
-before_install: 
+before_install:
   - docker build -t sythnlkn/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run -e CI=true sythnlkn/react-test npm test 
+  - docker run -e CI=true sythnlkn/react-test npm test
 
 after_success:
   - docker build -t sythnlkn/multi-client ./client
   - docker build -t sythnlkn/multi-nginx ./nginx
   - docker build -t sythnlkn/multi-server ./server
   - docker build -t sythnlkn/multi-worker ./worker
-
+  # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push sythnlkn/multi-worker
+  # Take those images and push them to docker hub
+  - docker push sythnlkn/multi-client
   - docker push sythnlkn/multi-nginx
   - docker push sythnlkn/multi-server
-  - docker push sythnlkn/multi-client
+  - docker push sythnlkn/multi-worker
+
+deploy: 
+  provider : eleasticbeanstalk
+  region: 'eu-west-1'
+  app: 'multi-docker'
+  env: 'Multidocker-env'
+  bucket_name: 'elasticbeanstalk-eu-west-1-544167776152'
+  buket_path: 'docker-multi'
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
